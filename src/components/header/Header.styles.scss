@@ -1,0 +1,22 @@
+.cm-header-container {
+  padding: 5px 15px;
+
+  .cm-logo {
+    h1 {
+      font-weight: 700;
+      font-style: italic;
+    }
+  }
+
+  .cm-add-todo-btn {
+    .MuiSvgIcon-root {
+      width: 35px;
+      height: 35px;
+    }
+  }
+
+  .cm-small-avatar {
+    width: 32px;
+    height: 32px;
+  }
+}

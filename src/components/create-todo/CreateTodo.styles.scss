@@ -1,0 +1,17 @@
+.cm-form-field {
+  margin-bottom: 20px;
+}
+
+.cm-form-field-half {
+  align-items: flex-end;
+
+  & > .cm-form-field {
+    width: 50%;
+    padding-right: 15px;
+  }
+
+  & > .cm-form-field:last-child {
+    padding-right: 0;
+    padding-left: 15px;
+  }
+}

@@ -1,0 +1,32 @@
+.cm-todo-container {
+  padding: 15px;
+
+  .cm-sidebar-wrapper {
+    width: 20%;
+    padding-right: 15px;
+
+    .cm-todo-tag-list {
+      li {
+        margin-bottom: 15px;
+      }
+
+      li a {
+        display: flex;
+        font-size: 16px;
+      }
+    }
+
+    .cm-todo-tag-list .cm-tag-bg {
+      display: block;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+  }
+
+  .cm-todo-list-wrapper {
+    width: 80%;
+    padding-left: 15px;
+  }
+}

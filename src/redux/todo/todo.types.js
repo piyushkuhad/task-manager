@@ -1,0 +1,7 @@
+export const todoTypes = {
+  CREATE_TODO: 'CREATE_TODO',
+  GET_TODO_LIST: 'GET_TODO_LIST',
+  GET_TODO: 'GET_TODO',
+  EDIT_TODO: 'EDIT_TODO',
+  DELETE_TODO: 'DELETE_TODO',
+};

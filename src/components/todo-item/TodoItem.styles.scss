@@ -1,0 +1,48 @@
+.cm-todo-item-container {
+  border-radius: 10px;
+  padding: 10px 15px;
+  background-color: #fff9de;
+
+  &.cm-todo-item-done {
+    .cm-todo-item-header,
+    .cm-todo-item-body {
+      text-decoration: line-through;
+    }
+  }
+
+  .cm-todo-item-top {
+    border-bottom: 1px solid #ccc;
+
+    .cm-todo-item-priority {
+      margin: 0;
+    }
+
+    .cm-todo-item-action {
+      padding: 5px;
+    }
+  }
+
+  .cm-todo-item-header {
+    padding: 5px 0;
+  }
+
+  .cm-todo-item-body {
+    padding: 5px 0;
+  }
+
+  .cm-todo-item-body p {
+    margin: 0;
+  }
+
+  .cm-todo-item-tags {
+    padding-top: 10px;
+
+    .cm-tag-bg {
+      display: inline-block;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+  }
+}
