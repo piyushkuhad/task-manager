@@ -74,10 +74,6 @@ const Header = () => {
     setHeaderDate(date);
   };
 
-  const dummy = () => {
-    setHeaderDate('2020-11-30T18:30:00.000Z');
-  };
-
   return (
     <div className="cm-header-container cm-flex-type-2">
       <div className="cm-page-center cm-flex-type-1">
@@ -93,7 +89,6 @@ const Header = () => {
               pickerTimeFormat="dd MMM, yyyy"
             />
           </div>
-          <button onClick={() => dummy()}>Click</button>
           <IconButton
             color="primary"
             aria-label="account of current user"
