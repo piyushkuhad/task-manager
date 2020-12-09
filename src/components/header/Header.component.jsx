@@ -5,17 +5,45 @@ import Avatar from '@material-ui/core/Avatar';
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import firebase from 'firebase';
+import moment from 'moment';
 
 import './Header.styles.scss';
+import SingleDatePicker from '../date-picker/SingleDatePicker.component';
 import CreateTodo from '../create-todo/CreateTodo.component';
+import { cleanDate } from '../../utils/utilFn';
+import { selectedDateChange } from '../../redux/app/app.action';
 
 const Header = () => {
+  const dispatch = useDispatch();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
   const { displayName, photoURL } = useSelector((state) => state.firebase.auth);
+  const { selectedDate } = useSelector((state) => state.todos);
+  //moment('12/10/2020').toISOString()
+  const [headerDate, setHeaderDate] = React.useState(
+    moment(
+      `${selectedDate.selectedMonth}/${selectedDate.selectedDay}/${selectedDate.selectedYear}`
+    ).toDate()
+  );
+
+  // console.log(
+  //   'selectedDate',
+  //   headerDate,
+  //   moment(headerDate).format('DD/MM/YYYY')
+  // );
+
+  React.useEffect(() => {
+    setHeaderDate(
+      moment(
+        `${selectedDate.selectedMonth}/${selectedDate.selectedDay}/${selectedDate.selectedYear}`
+      ).toDate()
+    );
+  }, [selectedDate]);
+
   const [openDialog, setOpenDialog] = React.useState(false);
 
   const handleMenu = (event) => {
@@ -35,13 +63,37 @@ const Header = () => {
     firebase.logout();
   };
 
+  const onDateChange = (date) => {
+    console.log('Changed Date', date);
+    const dateObj = {
+      selectedDay: cleanDate(date, 'DD'),
+      selectedMonth: cleanDate(date, 'MM'),
+      selectedYear: cleanDate(date, 'YYYY'),
+    };
+    dispatch(selectedDateChange(dateObj));
+    setHeaderDate(date);
+  };
+
+  const dummy = () => {
+    setHeaderDate('2020-11-30T18:30:00.000Z');
+  };
+
   return (
     <div className="cm-header-container cm-flex-type-2">
       <div className="cm-page-center cm-flex-type-1">
         <div className="cm-logo">
           <h1>todo</h1>
         </div>
-        <div className="cm-todo-menu">
+        <div className="cm-todo-menu cm-flex-type-1">
+          <div className="cm-header-date-filter">
+            <SingleDatePicker
+              fieldLabel="Filter Date"
+              dateValue={headerDate}
+              dateValueHandler={onDateChange}
+              pickerTimeFormat="dd MMM, yyyy"
+            />
+          </div>
+          <button onClick={() => dummy()}>Click</button>
           <IconButton
             color="primary"
             aria-label="account of current user"

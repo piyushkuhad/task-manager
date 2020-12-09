@@ -1,0 +1,18 @@
+.cm-form-dialog-container {
+  svg {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.cm-form-dialog-popover {
+  .MuiPaper-root {
+    padding: 10px 15px;
+    align-items: center;
+    display: flex;
+  }
+
+  .MuiPaper-root > button {
+    margin-left: 10px;
+  }
+}

@@ -13,11 +13,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
-import DatePicker from '../date-picker/DatePicker.component';
+import SingleDatePicker from '../date-picker/SingleDatePicker.component';
 
 import './CreateTodo.styles.scss';
 import { useDispatch } from 'react-redux';
 import { createTodo } from '../../redux/todo/todo.action';
+import FormDialog from '../form-dialog/FormDialog.component';
 
 const useStyles = makeStyles((theme) => ({
   dialogActions: {
@@ -65,8 +66,6 @@ const CreateTodo = ({ openDialogState, closeDialogHandler, initialValues }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const theme = useTheme();
-  const [taskPriorityState, setTaskPriorityState] = React.useState([]);
-  const [taskTagsState, setTaskTagsState] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [formValues, setFormValues] = React.useState(initialValues);
 
@@ -116,6 +115,7 @@ const CreateTodo = ({ openDialogState, closeDialogHandler, initialValues }) => {
   };
 
   const handleFormSubmit = () => {
+    formValues.completed = false;
     console.log('Data', formValues);
     dispatch(createTodo(formValues));
     closeDialogHandler();
@@ -155,7 +155,7 @@ const CreateTodo = ({ openDialogState, closeDialogHandler, initialValues }) => {
             </div>
 
             <div className="cm-form-field-half cm-flex-type-1">
-              <div className="cm-form-field">
+              <div className="cm-form-field cm-field-with-btn cm-flex-type-1">
                 <FormControl fullWidth>
                   <InputLabel>Task Priority</InputLabel>
                   <Select
@@ -186,9 +186,14 @@ const CreateTodo = ({ openDialogState, closeDialogHandler, initialValues }) => {
                     ))}
                   </Select>
                 </FormControl>
+                <FormDialog
+                  targetId="add-priority"
+                  textFieldLabel="Add Task Priority"
+                  buttonLabel="Add"
+                />
               </div>
               <div className="cm-form-field">
-                <DatePicker
+                <SingleDatePicker
                   dateValue={formValues.taskTime}
                   dateValueHandler={getDateValue}
                 />
@@ -258,7 +263,7 @@ CreateTodo.defaultProps = {
     taskName: 'Test Task',
     taskDescription: 'This is a test description',
     taskTime: new Date().toISOString(),
-    taskPriority: ['Urgent'],
+    taskPriority: 'Urgent',
     taskTags: ['Work', 'Study'],
   },
 };

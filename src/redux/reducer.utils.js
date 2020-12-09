@@ -21,7 +21,7 @@ export const grpTodosByDate = (data) => {
   return groupArrays;
 };
 
-export const getISOFormat = (date) => date.toISOString();
+export const getISOFormat = (date) => new Date(date).toISOString();
 
 export const addTodoByDate = (data, item) => {
   console.log('Data', data, item);

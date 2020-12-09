@@ -9,10 +9,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import './TodoItem.styles.scss';
 
-const TodoItem = () => {
+const TodoItem = ({ data }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [checkBoxState, setCheckBoxState] = React.useState(false);
+  const [checkBoxState, setCheckBoxState] = React.useState(data.completed);
 
   const handleChange = (event) => {
     setCheckBoxState((prevState) => !prevState);
@@ -42,7 +42,7 @@ const TodoItem = () => {
       }`}
     >
       <div className="cm-todo-item-top cm-flex-type-1">
-        <p className="cm-todo-item-priority">Urgent</p>
+        <p className="cm-todo-item-priority">{data.taskPriority}</p>
         <IconButton
           color="primary"
           aria-label="Todo Actions"
@@ -74,14 +74,10 @@ const TodoItem = () => {
         </Menu>
       </div>
       <div className="cm-todo-item-header">
-        <h3>Todo Title</h3>
+        <h3>{data.taskName}</h3>
       </div>
       <div className="cm-todo-item-body">
-        <p>
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s
-        </p>
+        <p>{data.taskDescription}</p>
       </div>
       <div className="cm-todo-item-footer cm-flex-type-1">
         <div className="cm-todo-item-tags">
