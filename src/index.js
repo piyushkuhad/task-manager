@@ -28,8 +28,6 @@ const rrfProps = {
   dispatch: store.dispatch,
 };
 
-console.log('Runn');
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

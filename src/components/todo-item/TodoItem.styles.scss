@@ -2,6 +2,7 @@
   border-radius: 10px;
   padding: 10px 15px;
   background-color: #fff9de;
+  margin-bottom: 30px;
 
   &.cm-todo-item-done {
     .cm-todo-item-header,
@@ -44,5 +45,11 @@
       border-radius: 50%;
       margin-right: 10px;
     }
+  }
+
+  .cm-todo-item-footer {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
   }
 }

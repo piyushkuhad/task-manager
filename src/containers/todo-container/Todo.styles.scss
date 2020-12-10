@@ -8,20 +8,20 @@
     .cm-todo-tag-list {
       li {
         margin-bottom: 15px;
-      }
-
-      li a {
         display: flex;
+        align-items: center;
         font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
       }
-    }
 
-    .cm-todo-tag-list .cm-tag-bg {
-      display: block;
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      margin-right: 10px;
+      .cm-tag-bg {
+        display: block;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
     }
   }
 

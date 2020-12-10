@@ -51,8 +51,43 @@ export const createTodo = (data) => async (dispatch, getState) => {
         await todoDocRef.update({
           [todoString]: formObj,
         });
+
+        //When another Todo is created on same Date.
+        dispatch({
+          type: todoTypes.CREATE_TODO_WITHIN_DATE,
+          payload: {
+            // todosByMonthData: {
+            //   [`${getMonth}-${getYear}`]: {
+            //     [getDate]: { [timeNow]: formObj },
+            //   },
+            // },
+            todoByMonthData: { [timeNow]: formObj },
+            selectedDate: {
+              selectedDay: getDate,
+              selectedMonth: getMonth,
+              selectedYear: getYear,
+            },
+          },
+        });
       } else {
-        console.log("Doesn't Exists");
+        console.log("Date Doesn't Exists but month does");
+        const timeNow = Date.now();
+        const todoString = `todoListByDate.${getDate}.${timeNow}`;
+        await todoDocRef.update({
+          [todoString]: formObj,
+        });
+
+        dispatch({
+          type: todoTypes.CREATE_TODO_WITHIN_DATE,
+          payload: {
+            todoByMonthData: { [timeNow]: formObj },
+            selectedDate: {
+              selectedDay: getDate,
+              selectedMonth: getMonth,
+              selectedYear: getYear,
+            },
+          },
+        });
       }
     }
 
@@ -70,6 +105,8 @@ export const createTodo = (data) => async (dispatch, getState) => {
           [getDate]: { [timeNow]: formObj },
         },
       });
+
+      console.log('Yo:', await todoColRef.doc(`${uid}&${getMonth}${getYear}`));
 
       const getRef = await todoColRef.doc(`${uid}&${getMonth}${getYear}`).get();
 

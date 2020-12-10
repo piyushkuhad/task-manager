@@ -1,4 +1,4 @@
-import { addTodoByDate } from '../reducer.utils';
+import { addTodoByDate, mergeTodosByMonthData } from '../reducer.utils';
 import { todoTypes } from './todo.types';
 import { appTypes } from '../app/app.types';
 import { cleanDate } from '../../utils/utilFn';
@@ -51,11 +51,35 @@ const todoReducer = (state = INITIAL_STATE, action) => {
         selectedDate: action.payload.selectedDate,
       };
 
+    case todoTypes.CREATE_TODO_WITHIN_DATE:
+      console.log('payload:', action.payload);
+
+      const newObj = mergeTodosByMonthData(
+        state.todosByMonthData,
+        action.payload.todoByMonthData,
+        action.payload.selectedDate
+      );
+
+      console.log('Merge', newObj);
+
+      return {
+        ...state,
+        // todosByMonthData: {
+        //   ...state.todosByMonthData,
+        //   ...action.payload.todosByMonthData,
+        // },
+        todosByMonthData: newObj,
+        selectedDate: action.payload.selectedDate,
+      };
+
     case appTypes.SELECTED_DATE_CHANGE:
       return {
         ...state,
         selectedDate: action.payload,
       };
+
+    case appTypes.USER_LOGOUT:
+      return INITIAL_STATE;
 
     default:
       return state;

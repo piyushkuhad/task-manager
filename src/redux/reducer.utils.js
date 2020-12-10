@@ -36,3 +36,36 @@ export const addTodoByDate = (data, item) => {
 
   return data;
 };
+
+export const mergeTodosByMonthData = (currentObj, newObj, selectedDateObj) => {
+  const { selectedDay, selectedMonth, selectedYear } = selectedDateObj;
+
+  //Check if month-year entry exists if not then create
+  if (currentObj[`${selectedMonth}-${selectedYear}`]) {
+    console.log('1');
+    let datePath = currentObj[`${selectedMonth}-${selectedYear}`][selectedDay];
+
+    console.log('Date Path:', datePath);
+
+    //check if date entry exists if true, then merge the data, else create the date entry
+    if (datePath) {
+      console.log('2');
+      datePath = {
+        ...datePath,
+        ...newObj,
+      };
+      console.log('Date Path After:', datePath);
+      currentObj[`${selectedMonth}-${selectedYear}`][selectedDay] = {
+        ...datePath,
+      };
+    } else {
+      console.log('3');
+      datePath = newObj;
+      currentObj[`${selectedMonth}-${selectedYear}`][selectedDay] = {
+        ...datePath,
+      };
+    }
+  }
+
+  return currentObj;
+};

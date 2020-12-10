@@ -6,14 +6,13 @@ import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { useSelector, useDispatch } from 'react-redux';
-import firebase from 'firebase';
 import moment from 'moment';
 
 import './Header.styles.scss';
 import SingleDatePicker from '../date-picker/SingleDatePicker.component';
 import CreateTodo from '../create-todo/CreateTodo.component';
 import { cleanDate } from '../../utils/utilFn';
-import { selectedDateChange } from '../../redux/app/app.action';
+import { selectedDateChange, userLogout } from '../../redux/app/app.action';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -60,11 +59,10 @@ const Header = () => {
 
   const signOutFn = (e) => {
     e.preventDefault();
-    firebase.logout();
+    dispatch(userLogout());
   };
 
   const onDateChange = (date) => {
-    console.log('Changed Date', date);
     const dateObj = {
       selectedDay: cleanDate(date, 'DD'),
       selectedMonth: cleanDate(date, 'MM'),

@@ -1,6 +1,9 @@
+import firebase from 'firebase';
+
 import { appTypes } from './app.types';
 import { firestore as db } from '../../firebase';
 import { cleanDate } from '../../utils/utilFn';
+import { persistor } from '../store';
 
 export const initialDataFetch = () => async (dispatch, getState) => {
   const { uid } = getState().firebase.auth;
@@ -57,4 +60,13 @@ export const selectedDateChange = (date) => (dispatch, getState) => {
 
 export const fetchDataByDate = (todoDate) => async (dispatch, getState) => {
   console.log('TodoDate', todoDate);
+};
+
+export const userLogout = () => {
+  persistor.purge();
+  firebase.logout();
+
+  return {
+    type: appTypes.USER_LOGOUT,
+  };
 };
