@@ -8,6 +8,8 @@ import history from './history';
 import PrivateRoute from './components/private-route/PrivateRoute.component';
 import SignIn from './components/signin/SignIn.component';
 import HomePage from './pages/home/Home.page';
+import AnimationComp from './components/animation-comp/AnimationComp.component';
+import animationData from './assets/animation/loader.json';
 
 const App = () => {
   const auth = useSelector((state) => state.firebase.auth);
@@ -31,7 +33,14 @@ const App = () => {
           </Router>
         </>
       ) : (
-        <h1>Loading...</h1>
+        <div className="cm-loader-container cm-flex-type-2">
+          <AnimationComp
+            animationData={animationData}
+            text="Loading..."
+            width={300}
+            height={300}
+          />
+        </div>
       )}
     </div>
   );
