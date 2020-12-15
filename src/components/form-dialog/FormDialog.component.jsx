@@ -1,5 +1,4 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -9,20 +8,17 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import './FormDialog.styles.scss';
 
-const useStyles = makeStyles((theme) => ({
-  typography: {
-    padding: theme.spacing(2),
-  },
-}));
-
 const FormDialog = ({
   targetId,
   textFieldLabel,
-  buttonLabel,
-  onSubmitHandler,
+  shouldOpen,
+  //buttonLabel,
+  //onSubmitHandler,
+  children,
 }) => {
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(shouldOpen);
+
+  console.log('shouldOpen', anchorEl);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -64,17 +60,7 @@ const FormDialog = ({
         }}
         className="cm-form-dialog-popover"
       >
-        <TextField
-          //name="taskDescription"
-          label={textFieldLabel}
-          fullWidth
-          //value={formValues.taskDescription}
-          //onChange={handleFieldChange}
-          inputProps={{ autoFocus: true }}
-        />
-        <Button onClick={onSubmitHandler} color="primary" variant="contained">
-          {buttonLabel}
-        </Button>
+        {children}
       </Popover>
     </div>
   );

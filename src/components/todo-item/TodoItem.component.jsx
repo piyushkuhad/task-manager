@@ -8,14 +8,25 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import './TodoItem.styles.scss';
+import { completedTask } from '../../redux/todo/todo.action';
+import { useDispatch } from 'react-redux';
 
-const TodoItem = ({ data }) => {
+const TodoItem = ({ data, deleteTodoHandler }) => {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [checkBoxState, setCheckBoxState] = React.useState(data.completed);
 
   const handleChange = (event) => {
-    setCheckBoxState((prevState) => !prevState);
+    setCheckBoxState((prevState) => {
+      dispatch(completedTask(data, !prevState));
+      return !prevState;
+    });
+  };
+
+  const deleteTodo = () => {
+    deleteTodoHandler(data);
+    setAnchorEl(null);
   };
 
   const colorArr = [
@@ -38,7 +49,7 @@ const TodoItem = ({ data }) => {
   return (
     <div
       className={`cm-todo-item-container box-shadow-1 ${
-        checkBoxState ? 'cm-todo-item-done' : null
+        checkBoxState && data.completed ? 'cm-todo-item-done' : null
       }`}
     >
       <div className="cm-todo-item-top cm-flex-type-1">
@@ -70,7 +81,7 @@ const TodoItem = ({ data }) => {
         >
           <MenuItem onClick={() => {}}>Edit</MenuItem>
           <MenuItem onClick={() => {}}>Copy</MenuItem>
-          <MenuItem onClick={() => {}}>Delete</MenuItem>
+          <MenuItem onClick={deleteTodo}>Delete</MenuItem>
         </Menu>
       </div>
       <div className="cm-todo-item-header">

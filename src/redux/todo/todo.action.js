@@ -1,4 +1,4 @@
-//import firebase from 'firebase';
+import firebase from 'firebase';
 
 import { todoTypes } from './todo.types';
 import { firestore as db } from '../../firebase';
@@ -159,24 +159,6 @@ export const createTodo = (data) => async (dispatch, getState) => {
   } catch (err) {
     console.log('Error', err);
   }
-
-  // console.log('Form Data', formObj);
-
-  // const todosRef = db.collection('todos');
-  // try {
-  //   const docRef = await todosRef.add(formObj);
-
-  //   const dispatchObj = await { ...formObj, _id: docRef.id };
-
-  //   await addDocToUserCol(formObj, docRef, formObj.userId);
-
-  //   dispatch({
-  //     type: todoTypes.CREATE_TODO,
-  //     payload: dispatchObj,
-  //   });
-  // } catch (err) {
-  //   console.log('Error', err);
-  // }
 };
 
 export const getTodoList = () => async (dispatch, getState) => {
@@ -193,6 +175,48 @@ export const getTodoList = () => async (dispatch, getState) => {
   });
 };
 
+export const completedTask = (data, completedBool) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    //console.log('Data', data);
+    const formObj = cloneDeep(data);
+    const onlyDate = formObj.taskTime;
+    const getId = formObj._id;
+    const getDate = cleanDate(onlyDate, 'DD');
+    const getMonth = cleanDate(onlyDate, 'MM');
+    const getYear = cleanDate(onlyDate, 'YYYY');
+    const { uid } = getState().firebase.auth;
+
+    const todoUpdateString = `todoListByDate.${getDate}.${getId}.completed`;
+
+    await db.doc(`todos-col/${uid}&${getMonth}${getYear}`).update({
+      [todoUpdateString]: completedBool,
+    });
+
+    formObj.completed = completedBool;
+
+    dispatch({
+      type: todoTypes.COMPLETED_TASK,
+      payload: {
+        todosByMonthData: {
+          [`${getMonth}-${getYear}`]: {
+            [getDate]: { [getId]: formObj },
+          },
+        },
+        selectedDate: {
+          selectedDay: getDate,
+          selectedMonth: getMonth,
+          selectedYear: getYear,
+        },
+      },
+    });
+  } catch (err) {
+    console.log('Error!!', err);
+  }
+};
+
 export const getTodo = (id) => ({
   type: todoTypes.GET_TODO,
 });
@@ -202,6 +226,62 @@ export const editTodo = (data) => ({
   payload: data,
 });
 
-export const deleteTodo = (id) => ({
-  type: todoTypes.DELETE_TODO,
-});
+export const deleteTodo = (data) => async (dispatch, getState) => {
+  try {
+    const onlyDate = data.taskTime;
+    const getId = data._id;
+    const getDate = cleanDate(onlyDate, 'DD');
+    const getMonth = cleanDate(onlyDate, 'MM');
+    const getYear = cleanDate(onlyDate, 'YYYY');
+    const { uid } = getState().firebase.auth;
+
+    const todoUpdateString = `todoListByDate.${getDate}.${getId}`;
+
+    await db.doc(`todos-col/${uid}&${getMonth}${getYear}`).update({
+      [todoUpdateString]: firebase.firestore.FieldValue.delete(),
+    });
+
+    dispatch({
+      type: todoTypes.DELETE_TODO,
+      payload: {
+        // todosByMonthData: {
+        //   [`${getMonth}-${getYear}`]: {
+        //     [getDate]: { [getId]: data },
+        //   },
+        // },
+        todoToDelete: getId,
+        selectedDate: {
+          selectedDay: getDate,
+          selectedMonth: getMonth,
+          selectedYear: getYear,
+        },
+      },
+    });
+  } catch (err) {
+    console.log('Error!!', err);
+  }
+};
+
+export const addPriority = (data) => async (dispatch, getState) => {
+  try {
+    const userPriorities = getState().firebase.profile.userPriorities;
+    const { uid } = getState().firebase.auth;
+    const priorityExists = userPriorities.findIndex((el) => el === data);
+
+    console.log('priorityExists', priorityExists, data);
+
+    if (priorityExists === -1) {
+      await db.doc(`users/${uid}`).update({
+        userPriorities: firebase.firestore.FieldValue.arrayUnion(data),
+      });
+    } else {
+      throw new Error('Priority already exists!');
+    }
+
+    dispatch({
+      type: todoTypes.ADD_PRIORITY,
+    });
+  } catch (err) {
+    console.log('Error!!', err);
+  }
+};

@@ -16,8 +16,8 @@ import Chip from '@material-ui/core/Chip';
 import SingleDatePicker from '../date-picker/SingleDatePicker.component';
 
 import './CreateTodo.styles.scss';
-import { useDispatch } from 'react-redux';
-import { createTodo } from '../../redux/todo/todo.action';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPriority, createTodo } from '../../redux/todo/todo.action';
 import FormDialog from '../form-dialog/FormDialog.component';
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +49,7 @@ const MenuProps = {
   },
 };
 
-const priorities = ['Low', 'Medium', 'High', 'Urgent'];
+//const priorities = ['Low', 'Medium', 'High', 'Urgent'];
 
 const tags = ['Work', 'Study', 'Entertainment', 'Family', 'Budget'];
 
@@ -62,12 +62,25 @@ const getStyles = (item, selectedItems, theme) => {
   };
 };
 
-const CreateTodo = ({ openDialogState, closeDialogHandler, initialValues }) => {
+const CreateTodo = ({
+  openDialogState,
+  closeDialogHandler,
+  initialValues,
+  initialDialogValues,
+}) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [formValues, setFormValues] = React.useState(initialValues);
+  const [dialogFormValues, setDialogFormValues] = React.useState(
+    initialDialogValues
+  );
+  const priorities = useSelector((state) =>
+    state.firebase.profile.userPriorities
+      ? state.firebase.profile.userPriorities
+      : []
+  );
 
   React.useEffect(() => {
     if (openDialogState) {
@@ -119,6 +132,22 @@ const CreateTodo = ({ openDialogState, closeDialogHandler, initialValues }) => {
     console.log('Data', formValues);
     dispatch(createTodo(formValues));
     closeDialogHandler();
+  };
+
+  const onDialogFieldChange = (event) => {
+    setDialogFormValues((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const onPrioritySubmitHandler = () => {
+    console.log('onPrioritySubmitHandler', dialogFormValues);
+    if (dialogFormValues.priorityName.length > 0) {
+      dispatch(addPriority(dialogFormValues.priorityName));
+    }
+
+    setDialogFormValues(initialDialogValues);
   };
 
   return (
@@ -190,7 +219,24 @@ const CreateTodo = ({ openDialogState, closeDialogHandler, initialValues }) => {
                   targetId="add-priority"
                   textFieldLabel="Add Task Priority"
                   buttonLabel="Add"
-                />
+                  shouldOpen={dialogFormValues.priorityDialog}
+                >
+                  <TextField
+                    name="priorityName"
+                    label="Add Task Priority"
+                    fullWidth
+                    value={dialogFormValues.priorityName}
+                    onChange={onDialogFieldChange}
+                    inputProps={{ autoFocus: true }}
+                  />
+                  <Button
+                    onClick={onPrioritySubmitHandler}
+                    color="primary"
+                    variant="contained"
+                  >
+                    Add
+                  </Button>
+                </FormDialog>
               </div>
               <div className="cm-form-field">
                 <SingleDatePicker
@@ -265,6 +311,13 @@ CreateTodo.defaultProps = {
     taskTime: new Date().toISOString(),
     taskPriority: 'Urgent',
     taskTags: ['Work', 'Study'],
+  },
+  initialDialogValues: {
+    priorityName: '',
+    tagName: '',
+    colorCode: '',
+    priorityDialog: null,
+    tagDialog: null,
   },
 };
 
