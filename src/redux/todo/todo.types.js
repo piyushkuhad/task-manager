@@ -8,4 +8,5 @@ export const todoTypes = {
   EDIT_TODO: 'EDIT_TODO',
   DELETE_TODO: 'DELETE_TODO',
   ADD_PRIORITY: 'ADD_PRIORITY',
+  ADD_TAG: 'ADD_TAG',
 };

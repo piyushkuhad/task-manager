@@ -13,8 +13,12 @@ const TodoContainer = () => {
     data: null,
   });
 
-  const { todosByMonthData, selectedDate, userTags } = useSelector(
+  const { todosByMonthData, selectedDate } = useSelector(
     (state) => state.todos
+  );
+
+  const userTags = useSelector((state) =>
+    state.firebase.profile.userTags ? state.firebase.profile.userTags : []
   );
 
   const deleteTodoClick = (data) => {
@@ -57,14 +61,14 @@ const TodoContainer = () => {
   };
 
   const showUserTags = () => {
-    if (Object.keys(userTags).length > 0) {
-      return Object.keys(userTags).map((el) => (
+    if (userTags.length > 0) {
+      return userTags.map((el) => (
         <li>
           <span
             className="cm-tag-bg"
-            style={{ backgroundColor: userTags[el].colorCode }}
+            style={{ backgroundColor: el.colorCode }}
           ></span>
-          <span className="cm-tag-title">{el}</span>
+          <span className="cm-tag-title">{el.tagName}</span>
         </li>
       ));
     } else {

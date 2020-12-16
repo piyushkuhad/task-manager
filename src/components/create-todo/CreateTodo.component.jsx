@@ -17,8 +17,9 @@ import SingleDatePicker from '../date-picker/SingleDatePicker.component';
 
 import './CreateTodo.styles.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPriority, createTodo } from '../../redux/todo/todo.action';
-import FormDialog from '../form-dialog/FormDialog.component';
+import { createTodo } from '../../redux/todo/todo.action';
+import PriorityDialog from '../form-dialog/PriorityDialog.component';
+import TagDialog from '../form-dialog/TagDialog.component';
 
 const useStyles = makeStyles((theme) => ({
   dialogActions: {
@@ -51,7 +52,7 @@ const MenuProps = {
 
 //const priorities = ['Low', 'Medium', 'High', 'Urgent'];
 
-const tags = ['Work', 'Study', 'Entertainment', 'Family', 'Budget'];
+//const tags = ['Work', 'Study', 'Entertainment', 'Family', 'Budget'];
 
 const getStyles = (item, selectedItems, theme) => {
   return {
@@ -62,23 +63,22 @@ const getStyles = (item, selectedItems, theme) => {
   };
 };
 
-const CreateTodo = ({
-  openDialogState,
-  closeDialogHandler,
-  initialValues,
-  initialDialogValues,
-}) => {
+const CreateTodo = ({ openDialogState, closeDialogHandler, initialValues }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [formValues, setFormValues] = React.useState(initialValues);
-  const [dialogFormValues, setDialogFormValues] = React.useState(
-    initialDialogValues
-  );
+
   const priorities = useSelector((state) =>
     state.firebase.profile.userPriorities
       ? state.firebase.profile.userPriorities
+      : []
+  );
+
+  const tags = useSelector((state) =>
+    state.firebase.profile.userTags
+      ? state.firebase.profile.userTags.map((el) => el.tagName)
       : []
   );
 
@@ -132,22 +132,6 @@ const CreateTodo = ({
     console.log('Data', formValues);
     dispatch(createTodo(formValues));
     closeDialogHandler();
-  };
-
-  const onDialogFieldChange = (event) => {
-    setDialogFormValues((prevState) => ({
-      ...prevState,
-      [event.target.name]: event.target.value,
-    }));
-  };
-
-  const onPrioritySubmitHandler = () => {
-    console.log('onPrioritySubmitHandler', dialogFormValues);
-    if (dialogFormValues.priorityName.length > 0) {
-      dispatch(addPriority(dialogFormValues.priorityName));
-    }
-
-    setDialogFormValues(initialDialogValues);
   };
 
   return (
@@ -215,28 +199,11 @@ const CreateTodo = ({
                     ))}
                   </Select>
                 </FormControl>
-                <FormDialog
+                <PriorityDialog
                   targetId="add-priority"
                   textFieldLabel="Add Task Priority"
                   buttonLabel="Add"
-                  shouldOpen={dialogFormValues.priorityDialog}
-                >
-                  <TextField
-                    name="priorityName"
-                    label="Add Task Priority"
-                    fullWidth
-                    value={dialogFormValues.priorityName}
-                    onChange={onDialogFieldChange}
-                    inputProps={{ autoFocus: true }}
-                  />
-                  <Button
-                    onClick={onPrioritySubmitHandler}
-                    color="primary"
-                    variant="contained"
-                  >
-                    Add
-                  </Button>
-                </FormDialog>
+                />
               </div>
               <div className="cm-form-field">
                 <SingleDatePicker
@@ -246,7 +213,7 @@ const CreateTodo = ({
               </div>
             </div>
 
-            <div className="cm-form-field">
+            <div className="cm-form-field cm-field-with-btn cm-flex-type-1">
               <FormControl fullWidth>
                 <InputLabel>Task Tags</InputLabel>
                 <Select
@@ -283,6 +250,11 @@ const CreateTodo = ({
                 </Select>
                 <FormHelperText>Maximum 5 tags can be selected.</FormHelperText>
               </FormControl>
+              <TagDialog
+                targetId="add-tag"
+                textFieldLabel="Add Tags"
+                buttonLabel="Add"
+              />
             </div>
           </form>
         </DialogContent>
@@ -311,13 +283,6 @@ CreateTodo.defaultProps = {
     taskTime: new Date().toISOString(),
     taskPriority: 'Urgent',
     taskTags: ['Work', 'Study'],
-  },
-  initialDialogValues: {
-    priorityName: '',
-    tagName: '',
-    colorCode: '',
-    priorityDialog: null,
-    tagDialog: null,
   },
 };
 

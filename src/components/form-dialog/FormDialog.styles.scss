@@ -16,3 +16,22 @@
     margin-left: 10px;
   }
 }
+
+.cm-tag-dialog-popover {
+  & > .MuiPaper-root {
+    flex-wrap: wrap;
+  }
+
+  .cm-tag-color-picker {
+    width: 100%;
+    margin-bottom: 20px;
+
+    .twitter-picker {
+      width: calc(100% - 100px) !important;
+
+      span > div {
+        border-radius: 50% !important;
+      }
+    }
+  }
+}

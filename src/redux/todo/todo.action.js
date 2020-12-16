@@ -285,3 +285,27 @@ export const addPriority = (data) => async (dispatch, getState) => {
     console.log('Error!!', err);
   }
 };
+
+export const addTag = (data) => async (dispatch, getState) => {
+  try {
+    const userTags = getState().firebase.profile.userTags;
+    const { uid } = getState().firebase.auth;
+    const tagExists = userTags.findIndex((el) => el.tagName === data.tagName);
+
+    console.log('tagExists', tagExists, data);
+
+    if (tagExists === -1) {
+      await db.doc(`users/${uid}`).update({
+        userTags: firebase.firestore.FieldValue.arrayUnion(data),
+      });
+    } else {
+      throw new Error('Tag already exists!');
+    }
+
+    dispatch({
+      type: todoTypes.ADD_TAG,
+    });
+  } catch (err) {
+    console.log('Error!!', err);
+  }
+};

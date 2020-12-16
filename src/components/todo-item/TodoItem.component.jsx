@@ -11,11 +11,12 @@ import './TodoItem.styles.scss';
 import { completedTask } from '../../redux/todo/todo.action';
 import { useDispatch } from 'react-redux';
 
-const TodoItem = ({ data, deleteTodoHandler }) => {
+const TodoItem = ({ data, deleteTodoHandler, userTagsData }) => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [checkBoxState, setCheckBoxState] = React.useState(data.completed);
+  const [userTag, setUserTag] = React.useState([]);
 
   const handleChange = (event) => {
     setCheckBoxState((prevState) => {
@@ -45,6 +46,20 @@ const TodoItem = ({ data, deleteTodoHandler }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  React.useEffect(() => {
+    if (data.taskTags.length > 0) {
+      const todoTags = data.taskTags.map((el) => {
+        const tagExists = userTagsData.find((elem) => elem.tagName === el);
+
+        if (tagExists) {
+          return tagExists;
+        } else return { tagName: el, colorCode: '#f00', exists: false };
+      });
+      console.log(todoTags);
+      setUserTag(todoTags);
+    }
+  }, [data.taskTags, userTagsData]);
 
   return (
     <div
@@ -93,7 +108,21 @@ const TodoItem = ({ data, deleteTodoHandler }) => {
       <div className="cm-todo-item-footer cm-flex-type-1">
         <div className="cm-todo-item-tags">
           <ul className="cm-menu-ul">
-            <Tooltip title="Work" arrow>
+            {userTag.length > 0 ? (
+              userTag.map((el) => (
+                <Tooltip title={el.tagName} arrow>
+                  <li
+                    className="cm-tag-bg"
+                    style={{ backgroundColor: el.colorCode }}
+                  >
+                    {el.exists !== undefined ? '?' : null}
+                  </li>
+                </Tooltip>
+              ))
+            ) : (
+              <li className="simple-txt">No Tags</li>
+            )}
+            {/* <Tooltip title="Work" arrow>
               <li
                 className="cm-tag-bg"
                 style={{ backgroundColor: colorArr[0] }}
@@ -104,7 +133,7 @@ const TodoItem = ({ data, deleteTodoHandler }) => {
                 className="cm-tag-bg"
                 style={{ backgroundColor: colorArr[1] }}
               />
-            </Tooltip>
+            </Tooltip> */}
           </ul>
         </div>
         <FormControlLabel
