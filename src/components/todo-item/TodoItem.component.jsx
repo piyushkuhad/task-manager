@@ -30,15 +30,6 @@ const TodoItem = ({ data, deleteTodoHandler, userTagsData }) => {
     setAnchorEl(null);
   };
 
-  const colorArr = [
-    '#b2afa1',
-    '#ffe880',
-    '#d1e5f7',
-    '#daf2d6',
-    '#ffcece',
-    '#d2ceff',
-  ];
-
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -56,7 +47,7 @@ const TodoItem = ({ data, deleteTodoHandler, userTagsData }) => {
           return tagExists;
         } else return { tagName: el, colorCode: '#f00', exists: false };
       });
-      console.log(todoTags);
+      //console.log(todoTags);
       setUserTag(todoTags);
     }
   }, [data.taskTags, userTagsData]);
@@ -68,7 +59,27 @@ const TodoItem = ({ data, deleteTodoHandler, userTagsData }) => {
       }`}
     >
       <div className="cm-todo-item-top cm-flex-type-1">
-        <p className="cm-todo-item-priority">{data.taskPriority}</p>
+        <div className="cm-todo-header-left cm-flex-type-1">
+          <div className="cm-todo-item-tags">
+            <ul className="cm-menu-ul">
+              {userTag.length > 0 ? (
+                userTag.map((el) => (
+                  <Tooltip title={el.tagName} arrow>
+                    <li
+                      className="cm-tag-bg"
+                      style={{ backgroundColor: el.colorCode }}
+                    >
+                      {el.exists !== undefined ? '?' : null}
+                    </li>
+                  </Tooltip>
+                ))
+              ) : (
+                <li className="simple-txt">No Tags</li>
+              )}
+            </ul>
+          </div>
+          <p className="cm-todo-item-priority">{data.taskPriority}</p>
+        </div>
         <IconButton
           color="primary"
           aria-label="Todo Actions"
@@ -99,42 +110,10 @@ const TodoItem = ({ data, deleteTodoHandler, userTagsData }) => {
           <MenuItem onClick={deleteTodo}>Delete</MenuItem>
         </Menu>
       </div>
-      <div className="cm-todo-item-header">
-        <h3>{data.taskName}</h3>
-      </div>
-      <div className="cm-todo-item-body">
-        <p>{data.taskDescription}</p>
-      </div>
-      <div className="cm-todo-item-footer cm-flex-type-1">
-        <div className="cm-todo-item-tags">
-          <ul className="cm-menu-ul">
-            {userTag.length > 0 ? (
-              userTag.map((el) => (
-                <Tooltip title={el.tagName} arrow>
-                  <li
-                    className="cm-tag-bg"
-                    style={{ backgroundColor: el.colorCode }}
-                  >
-                    {el.exists !== undefined ? '?' : null}
-                  </li>
-                </Tooltip>
-              ))
-            ) : (
-              <li className="simple-txt">No Tags</li>
-            )}
-            {/* <Tooltip title="Work" arrow>
-              <li
-                className="cm-tag-bg"
-                style={{ backgroundColor: colorArr[0] }}
-              />
-            </Tooltip>
-            <Tooltip title="Study" arrow>
-              <li
-                className="cm-tag-bg"
-                style={{ backgroundColor: colorArr[1] }}
-              />
-            </Tooltip> */}
-          </ul>
+      <div className="cm-todo-item-body cm-flex-type-1">
+        <div className="cm-todo-item-content">
+          <h3>{data.taskName}</h3>
+          <p>{data.taskDescription}</p>
         </div>
         <FormControlLabel
           control={

@@ -63,7 +63,7 @@ const TodoContainer = () => {
   const showUserTags = () => {
     if (userTags.length > 0) {
       return userTags.map((el) => (
-        <li>
+        <li key={el.tagName}>
           <span
             className="cm-tag-bg"
             style={{ backgroundColor: el.colorCode }}

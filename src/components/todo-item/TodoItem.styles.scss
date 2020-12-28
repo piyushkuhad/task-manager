@@ -5,10 +5,14 @@
   margin-bottom: 30px;
 
   &.cm-todo-item-done {
-    .cm-todo-item-header,
     .cm-todo-item-body {
       text-decoration: line-through;
     }
+  }
+
+  .cm-todo-item-tags {
+    border-right: 2px solid #ccc;
+    margin-right: 10px;
   }
 
   .cm-todo-item-top {
@@ -16,6 +20,7 @@
 
     .cm-todo-item-priority {
       margin: 0;
+      font-weight: 600;
     }
 
     .cm-todo-item-action {
@@ -36,8 +41,6 @@
   }
 
   .cm-todo-item-tags {
-    padding-top: 10px;
-
     ul {
       display: flex;
       align-items: center;
