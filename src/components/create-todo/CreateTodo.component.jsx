@@ -278,11 +278,11 @@ const CreateTodo = ({ openDialogState, closeDialogHandler, initialValues }) => {
 CreateTodo.defaultProps = {
   openDialogState: false,
   initialValues: {
-    taskName: 'Test Task',
-    taskDescription: 'This is a test description',
+    taskName: '',
+    taskDescription: '',
     taskTime: new Date().toISOString(),
-    taskPriority: 'Urgent',
-    taskTags: ['Work', 'Study'],
+    taskPriority: '',
+    taskTags: [],
   },
 };
 

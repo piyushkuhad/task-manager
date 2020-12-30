@@ -5,14 +5,6 @@ import { firestore as db } from '../../firebase';
 import cloneDeep from 'lodash/cloneDeep';
 import { cleanDate } from '../../utils/utilFn';
 
-// const addDocToUserCol = async (formValues, docRef, uid) => {
-//   const todoString = `todos.${formValues.taskTime.split('T')[0]}`;
-
-//   await db.doc(`users/${uid}`).update({
-//     [todoString]: firebase.firestore.FieldValue.arrayUnion(docRef),
-//   });
-// };
-
 export const createTodo = (data) => async (dispatch, getState) => {
   try {
     const formObj = cloneDeep(data);

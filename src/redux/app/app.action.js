@@ -5,6 +5,27 @@ import { firestore as db } from '../../firebase';
 import { cleanDate } from '../../utils/utilFn';
 import { persistor } from '../store';
 
+export const emailVerification = () => async (dispatch, getState) => {
+  const { emailVerified } = getState().firebase.auth;
+
+  const notifyObj = { message: null, severity: 'info' };
+
+  if (!emailVerified) {
+    firebase
+      .auth()
+      .currentUser.sendEmailVerification()
+      .then(() => {
+        notifyObj.message =
+          'Verification mail has been sent to your email address. Please verify your email.';
+        dispatch({
+          type: appTypes.SHOW_SNACKBAR,
+          payload: notifyObj,
+        });
+      })
+      .catch((err) => console.log('emailVerified Error:', err));
+  }
+};
+
 export const initialDataFetch = () => async (dispatch, getState) => {
   const { uid } = getState().firebase.auth;
 
@@ -15,11 +36,11 @@ export const initialDataFetch = () => async (dispatch, getState) => {
     .doc(`users/${uid}`)
     .get()
     .then(async (el) => {
-      console.log('El', el.data());
+      await console.log('El', el.data());
 
-      const dispatchObj = { ...el.data() };
+      const dispatchObj = { ...el.data(), todoListByDateData: {} };
 
-      if (el.data().todoRefByMonth) {
+      if (Object.keys(el.data().todoRefByMonth).length > 0) {
         if (
           Object.keys(el.data().todoRefByMonth).length > 0 &&
           !!el.data().todoRefByMonth[`${getMonth}-${getYear}`]
@@ -42,6 +63,8 @@ export const initialDataFetch = () => async (dispatch, getState) => {
             : {};
         }
       }
+
+      console.log('DispatchObj', dispatchObj);
 
       dispatch({
         type: appTypes.INITIAL_DATA_FETCH,
@@ -70,3 +93,12 @@ export const userLogout = () => {
     type: appTypes.USER_LOGOUT,
   };
 };
+
+export const showSnackbar = (data) => ({
+  type: appTypes.SHOW_SNACKBAR,
+  payload: data,
+});
+
+export const hideSnackbar = () => ({
+  type: appTypes.HIDE_SNACKBAR,
+});

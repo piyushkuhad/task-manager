@@ -19,6 +19,10 @@ const INITIAL_STATE = {
     selectedMonth: cleanDate(new Date(), 'MM'),
     selectedYear: cleanDate(new Date(), 'YYYY'),
   },
+  appNotification: {
+    message: null,
+    severity: 'info',
+  },
 };
 
 const todoReducer = (state = INITIAL_STATE, action) => {
@@ -30,6 +34,7 @@ const todoReducer = (state = INITIAL_STATE, action) => {
         todos: addTodoByDate(state.todos, action.payload),
         //todos: todoList,
       };
+
     case appTypes.INITIAL_DATA_FETCH:
       return {
         ...state,
@@ -96,6 +101,18 @@ const todoReducer = (state = INITIAL_STATE, action) => {
 
     case appTypes.USER_LOGOUT:
       return INITIAL_STATE;
+
+    case appTypes.SHOW_SNACKBAR:
+      return {
+        ...state,
+        appNotification: { ...action.payload },
+      };
+
+    case appTypes.HIDE_SNACKBAR:
+      return {
+        ...state,
+        appNotification: { message: null, severity: 'info' },
+      };
 
     default:
       return state;

@@ -1,0 +1,31 @@
+.MuiSnackbar-root {
+  &.error {
+    color: rgb(250, 179, 174);
+    background-color: rgb(24, 6, 5);
+  }
+
+  &.warning {
+    color: rgb(255, 213, 153);
+    background-color: rgb(25, 15, 0);
+  }
+
+  &.info {
+    color: rgb(166, 213, 250);
+    background-color: rgb(3, 14, 24);
+  }
+
+  &.success {
+    color: rgb(183, 223, 185);
+    background-color: rgb(7, 17, 7);
+  }
+
+  .MuiSnackbarContent-root {
+    background-color: inherit;
+    color: inherit;
+
+    .MuiSvgIcon-root {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+  }
+}
