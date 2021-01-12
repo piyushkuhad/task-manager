@@ -4,10 +4,7 @@ import Button from '@material-ui/core/Button';
 import Lottie from 'react-lottie';
 
 import animationData from '../../assets/animation/send-mail.json';
-import {
-  emailVerification,
-  initialDataFetch,
-} from '../../redux/app/app.action';
+import { emailVerification } from '../../redux/app/app.action';
 import './VerifyEmail.styles.scss';
 
 const VerifyEmail = () => {
@@ -32,7 +29,6 @@ const VerifyEmail = () => {
   };
 
   const checkVerification = () => {
-    //dispatch(initialDataFetch());
     window.location.reload();
   };
 

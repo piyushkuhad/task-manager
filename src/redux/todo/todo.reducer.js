@@ -23,6 +23,12 @@ const INITIAL_STATE = {
     message: null,
     severity: 'info',
   },
+  appScheme: {
+    darkMode: false,
+    cardColor: '#fff9de',
+    cardTxtColor: '#69665c',
+    enableNotifications: false,
+  },
 };
 
 const todoReducer = (state = INITIAL_STATE, action) => {
@@ -62,11 +68,11 @@ const todoReducer = (state = INITIAL_STATE, action) => {
 
     case todoTypes.COMPLETED_TASK:
     case todoTypes.CREATE_TODO_WITHIN_DATE:
-      console.log('payload:', action.payload);
+      //console.log('payload:', action.payload);
 
       const newObj = mergeTodosByMonthData(
         state.todosByMonthData,
-        action.payload.todoByMonthData,
+        action.payload.todosByMonthData,
         action.payload.selectedDate
       );
 
@@ -91,7 +97,7 @@ const todoReducer = (state = INITIAL_STATE, action) => {
         action.payload.selectedDate
       );
 
-      console.log('Delete todo', filteredTodo);
+      //console.log('Delete todo', filteredTodo);
 
       return {
         ...state,
@@ -112,6 +118,15 @@ const todoReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         appNotification: { message: null, severity: 'info' },
+      };
+
+    case appTypes.CHANGE_USER_SETTING:
+      return {
+        ...state,
+        appScheme: {
+          ...state.appScheme,
+          ...action.payload,
+        },
       };
 
     default:

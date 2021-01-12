@@ -1,0 +1,104 @@
+@import '../../utils/color_variables.scss';
+
+.cm-page-heading {
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.cm-user-info-container {
+  .cm-profile-image-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 30px;
+
+    .cm-profile-image {
+      position: relative;
+
+      img {
+        border-radius: 50%;
+        width: 128px;
+        height: 128px;
+        object-fit: cover;
+        padding: 5px;
+        vertical-align: middle;
+      }
+
+      .cm-change-img-btn {
+        position: absolute;
+        bottom: 10px;
+        right: 0;
+        padding: 5px;
+        border: none;
+        cursor: pointer;
+        background-color: $primaryTxtColor;
+        transition: all 300ms ease;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+
+        label {
+          cursor: inherit;
+        }
+
+        input[type='file'] {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          top: 0;
+          left: 0;
+        }
+      }
+
+      &:hover .cm-change-img-btn {
+        opacity: 1;
+      }
+    }
+
+    h3 {
+      padding-left: 20px;
+      text-transform: capitalize;
+    }
+  }
+
+  .cm-profile-info {
+    .cm-form-field {
+      margin-bottom: 50px;
+    }
+
+    .cm-form-field-half {
+      align-items: flex-start;
+    }
+  }
+}
+
+.cm-my-account-settings-container {
+  .cm-radio-field {
+    margin-bottom: 20px;
+  }
+
+  .cm-tag-color-picker {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    p {
+      width: 100%;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .twitter-picker {
+      margin-right: 15px;
+    }
+  }
+
+  .cm-color-preview {
+    max-width: 250px;
+    width: 100%;
+    background-color: #ccc;
+    min-height: 90px;
+    border-radius: 10px;
+  }
+}

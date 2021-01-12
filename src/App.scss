@@ -163,7 +163,7 @@
   align-items: center;
 }
 
-/*---------------*/
+/*------Loader---------*/
 
 .cm-loader-container {
   position: fixed;
@@ -174,6 +174,10 @@
   background-color: rgba(255, 255, 255, 0.7);
   z-index: 99;
   text-align: center;
+
+  body.dark-mode & {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 
   h1 {
     padding: 0;
@@ -226,10 +230,16 @@
 //   color: $warningRed;
 // }
 
-.dark-mode input,
-.dark-mode textarea {
-  background-color: $secDark;
-  color: $dmDarkFontColor;
+// .dark-mode input,
+// .dark-mode textarea {
+//   background-color: $secDark;
+//   color: $dmDarkFontColor;
+// }
+
+body.dark-mode .MuiOutlinedInput-input:-webkit-autofill {
+  background-color: transparent;
+  box-shadow: none;
+  -webkit-box-shadow: 0 0 0 30px $primaryDark inset !important;
 }
 
 .cm-page-center {
@@ -280,6 +290,12 @@
 
 #root .cm-error-msg {
   color: #f44336;
+}
+
+/*---------Color Picker------------*/
+
+body.dark-mode .twitter-picker {
+  background-color: $secDark !important;
 }
 
 @media (max-width: $bp4) {

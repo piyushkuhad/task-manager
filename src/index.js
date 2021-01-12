@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import './index.scss';
 import { store, persistor } from './redux/store';
@@ -11,17 +10,6 @@ import { rrfPropsHalf } from './firebase';
 import App from './App';
 
 //import reportWebVitals from './reportWebVitals';
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#69665c',
-    },
-  },
-  typography: {
-    fontFamily: ['Open Sans', 'sans-serif'].join(','),
-  },
-});
 
 const rrfProps = {
   ...rrfPropsHalf,
@@ -33,9 +21,9 @@ ReactDOM.render(
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <ReactReduxFirebaseProvider {...rrfProps}>
-          <MuiThemeProvider theme={theme}>
-            <App />
-          </MuiThemeProvider>
+          {/* <MuiThemeProvider theme={theme}> */}
+          <App />
+          {/* </MuiThemeProvider> */}
         </ReactReduxFirebaseProvider>
       </PersistGate>
     </Provider>

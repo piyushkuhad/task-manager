@@ -1,8 +1,14 @@
+@import '../../utils/color_variables.scss';
+
 .cm-todo-item-container {
   border-radius: 10px;
   padding: 10px 15px;
   background-color: #fff9de;
   margin-bottom: 30px;
+
+  body.dark-mode & {
+    color: $primaryDark;
+  }
 
   &.cm-todo-item-done {
     .cm-todo-item-body {

@@ -6,17 +6,31 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
+import { makeStyles } from '@material-ui/core/styles';
 
 import './TodoItem.styles.scss';
 import { completedTask } from '../../redux/todo/todo.action';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const TodoItem = ({ data, deleteTodoHandler, userTagsData }) => {
   const dispatch = useDispatch();
+  const { cardColor, cardTxtColor } = useSelector(
+    (state) => state.todos.appScheme
+  );
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [checkBoxState, setCheckBoxState] = React.useState(data.completed);
   const [userTag, setUserTag] = React.useState([]);
+
+  const useStyles = makeStyles((theme) => ({
+    checkBox: {
+      '& svg': {
+        fill: cardTxtColor,
+      },
+    },
+  }));
+
+  const classes = useStyles();
 
   const handleChange = (event) => {
     setCheckBoxState((prevState) => {
@@ -39,6 +53,7 @@ const TodoItem = ({ data, deleteTodoHandler, userTagsData }) => {
   };
 
   React.useEffect(() => {
+    if (!Array.isArray(data.taskTags)) return;
     if (data.taskTags.length > 0) {
       const todoTags = data.taskTags.map((el) => {
         const tagExists = userTagsData.find((elem) => elem.tagName === el);
@@ -47,7 +62,6 @@ const TodoItem = ({ data, deleteTodoHandler, userTagsData }) => {
           return tagExists;
         } else return { tagName: el, colorCode: '#f00', exists: false };
       });
-      //console.log(todoTags);
       setUserTag(todoTags);
     }
   }, [data.taskTags, userTagsData]);
@@ -55,8 +69,9 @@ const TodoItem = ({ data, deleteTodoHandler, userTagsData }) => {
   return (
     <div
       className={`cm-todo-item-container box-shadow-1 ${
-        checkBoxState && data.completed ? 'cm-todo-item-done' : null
+        checkBoxState && data.completed ? 'cm-todo-item-done' : ''
       }`}
+      style={{ backgroundColor: cardColor, color: cardTxtColor }}
     >
       <div className="cm-todo-item-top cm-flex-type-1">
         <div className="cm-todo-header-left cm-flex-type-1">
@@ -64,7 +79,7 @@ const TodoItem = ({ data, deleteTodoHandler, userTagsData }) => {
             <ul className="cm-menu-ul">
               {userTag.length > 0 ? (
                 userTag.map((el) => (
-                  <Tooltip title={el.tagName} arrow>
+                  <Tooltip title={el.tagName} key={el.tagName} arrow>
                     <li
                       className="cm-tag-bg"
                       style={{ backgroundColor: el.colorCode }}
@@ -122,6 +137,7 @@ const TodoItem = ({ data, deleteTodoHandler, userTagsData }) => {
               onChange={handleChange}
               name="done-checkbox"
               color="primary"
+              className={classes.checkBox}
             />
           }
           label="Done ?"

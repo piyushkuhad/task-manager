@@ -1,0 +1,42 @@
+@import '../../utils/color_variables.scss';
+
+.cm-my-account-container {
+  padding: 15px;
+
+  .cm-account-sidebar-wrapper {
+    width: 20%;
+    padding-right: 15px;
+    margin-top: 30px;
+
+    ul > li {
+      margin-bottom: 15px;
+      & > a {
+        color: $primaryTxtColor;
+        font-size: 16px;
+        padding-bottom: 10px;
+        display: block;
+        font-weight: 700;
+        opacity: 0.8;
+
+        &.active {
+          //color: $darkFontColor;
+          opacity: 1;
+        }
+
+        body.dark-mode &.active {
+          color: $baseWhite;
+        }
+
+        svg {
+          vertical-align: middle;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
+  .cm-account-main-wrapper {
+    width: 80%;
+    padding-left: 15px;
+  }
+}

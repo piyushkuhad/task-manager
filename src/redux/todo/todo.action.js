@@ -8,9 +8,6 @@ import { cleanDate } from '../../utils/utilFn';
 export const createTodo = (data) => async (dispatch, getState) => {
   try {
     const formObj = cloneDeep(data);
-
-    //const onlyDate = formObj.taskTime.split('T')[0];
-
     const onlyDate = formObj.taskTime;
 
     const getDate = cleanDate(onlyDate, 'DD');
@@ -21,22 +18,22 @@ export const createTodo = (data) => async (dispatch, getState) => {
       `${getMonth}-${getYear}`
     ];
 
-    console.log('monthEntry', !!monthEntry);
+    //console.log('monthEntry', !!monthEntry);
 
     //FIRST
     //Todo Document For Month Exists in todo-col collection
     if (!!monthEntry) {
-      console.log('monthEntry Id', monthEntry.id);
+      //console.log('monthEntry Id', monthEntry.id);
 
       //Reference to doc in todo-col Collection
       const todoDocRef = db.doc(`todos-col/${monthEntry.id}`);
       const todoDataSnapShot = await todoDocRef.get();
 
-      console.log('todoDataSnapShot', todoDataSnapShot.data().todoListByDate);
+      //console.log('todoDataSnapShot', todoDataSnapShot.data().todoListByDate);
 
       //Check if Field with getDate variable exists else create one
       if (todoDataSnapShot.data().todoListByDate[getDate]) {
-        console.log('Exists');
+        //console.log('Exists');
         const timeNow = Date.now();
         const todoString = `todoListByDate.${getDate}.${timeNow}`;
 
@@ -48,12 +45,7 @@ export const createTodo = (data) => async (dispatch, getState) => {
         dispatch({
           type: todoTypes.CREATE_TODO_WITHIN_DATE,
           payload: {
-            // todosByMonthData: {
-            //   [`${getMonth}-${getYear}`]: {
-            //     [getDate]: { [timeNow]: formObj },
-            //   },
-            // },
-            todoByMonthData: { [timeNow]: formObj },
+            todosByMonthData: { [timeNow]: formObj },
             selectedDate: {
               selectedDay: getDate,
               selectedMonth: getMonth,
@@ -62,7 +54,7 @@ export const createTodo = (data) => async (dispatch, getState) => {
           },
         });
       } else {
-        console.log("Date Doesn't Exists but month does");
+        //console.log("Date Doesn't Exists but month does");
         const timeNow = Date.now();
         const todoString = `todoListByDate.${getDate}.${timeNow}`;
         await todoDocRef.update({
@@ -72,7 +64,7 @@ export const createTodo = (data) => async (dispatch, getState) => {
         dispatch({
           type: todoTypes.CREATE_TODO_WITHIN_DATE,
           payload: {
-            todoByMonthData: { [timeNow]: formObj },
+            todosByMonthData: { [timeNow]: formObj },
             selectedDate: {
               selectedDay: getDate,
               selectedMonth: getMonth,
@@ -85,7 +77,7 @@ export const createTodo = (data) => async (dispatch, getState) => {
 
     //SECOND
     else {
-      console.log('Entry does not exist');
+      //console.log('Entry does not exist');
       //If Document for given month does not exist then create new entry in todo-col collection
       const { uid } = getState().firebase.auth;
       const timeNow = Date.now();
@@ -98,31 +90,11 @@ export const createTodo = (data) => async (dispatch, getState) => {
         },
       });
 
-      console.log('Yo:', await todoColRef.doc(`${uid}&${getMonth}${getYear}`));
+      //console.log('Yo:', await todoColRef.doc(`${uid}&${getMonth}${getYear}`));
 
       const getRef = await todoColRef.doc(`${uid}&${getMonth}${getYear}`).get();
 
       createdDocRef = await getRef.ref;
-
-      // .then(async () => {
-      //   const getRef = await todoColRef
-      //     .doc(`${uid}&${getMonth}${getYear}`)
-      //     .get();
-      //   return getRef.ref;
-      // })
-      // .then(async (getRef) => {
-      //   const todoMonthString = `todoRefByMonth.${getMonth}-${getYear}`;
-      //   createdDocRef = getRef;
-
-      //Dispatching 'Create todo new month' action so as to avoid "@@reactReduxFirebase/SET_PROFILE"
-      //running first since it runs when we make requet to users collection below causing
-      //inconsistency in todo state
-
-      //Create entry for new month in todoRefByMonth in user Collection
-      // db.doc(`users/${uid}`).update({
-      //   [todoMonthString]: getRef,
-      // });
-      //});
 
       //Create entry for new month in todoRefByMonth in user Collection
       const todoMonthString = `todoRefByMonth.${getMonth}-${getYear}`;
@@ -192,11 +164,7 @@ export const completedTask = (data, completedBool) => async (
     dispatch({
       type: todoTypes.COMPLETED_TASK,
       payload: {
-        todosByMonthData: {
-          [`${getMonth}-${getYear}`]: {
-            [getDate]: { [getId]: formObj },
-          },
-        },
+        todosByMonthData: { [getId]: formObj },
         selectedDate: {
           selectedDay: getDate,
           selectedMonth: getMonth,
@@ -236,11 +204,6 @@ export const deleteTodo = (data) => async (dispatch, getState) => {
     dispatch({
       type: todoTypes.DELETE_TODO,
       payload: {
-        // todosByMonthData: {
-        //   [`${getMonth}-${getYear}`]: {
-        //     [getDate]: { [getId]: data },
-        //   },
-        // },
         todoToDelete: getId,
         selectedDate: {
           selectedDay: getDate,
@@ -260,7 +223,7 @@ export const addPriority = (data) => async (dispatch, getState) => {
     const { uid } = getState().firebase.auth;
     const priorityExists = userPriorities.findIndex((el) => el === data);
 
-    console.log('priorityExists', priorityExists, data);
+    //console.log('priorityExists', priorityExists, data);
 
     if (priorityExists === -1) {
       await db.doc(`users/${uid}`).update({
@@ -284,7 +247,7 @@ export const addTag = (data) => async (dispatch, getState) => {
     const { uid } = getState().firebase.auth;
     const tagExists = userTags.findIndex((el) => el.tagName === data.tagName);
 
-    console.log('tagExists', tagExists, data);
+    //console.log('tagExists', tagExists, data);
 
     if (tagExists === -1) {
       await db.doc(`users/${uid}`).update({

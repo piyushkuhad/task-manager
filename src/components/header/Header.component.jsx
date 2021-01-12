@@ -7,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 import './Header.styles.scss';
 import SingleDatePicker from '../date-picker/SingleDatePicker.component';
@@ -20,7 +21,11 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-  const { displayName, photoURL } = useSelector((state) => state.firebase.auth);
+  //const { displayName, photoURL } = useSelector((state) => state.firebase.auth);
+  const { displayName, avatarUrl } = useSelector(
+    (state) => state.firebase.profile
+  );
+
   const { selectedDate } = useSelector((state) => state.todos);
   //moment('12/10/2020').toISOString()
   const [headerDate, setHeaderDate] = React.useState(
@@ -76,7 +81,9 @@ const Header = () => {
     <div className="cm-header-container cm-flex-type-2">
       <div className="cm-page-center cm-flex-type-1">
         <div className="cm-logo">
-          <h1>todo</h1>
+          <h1>
+            <Link to="/">todo</Link>
+          </h1>
         </div>
         <div className="cm-todo-menu cm-flex-type-1">
           <div className="cm-header-date-filter">
@@ -103,13 +110,14 @@ const Header = () => {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={handleMenu}
+            className="cm-header-avatar box-shadow-2"
           >
-            {!photoURL ? (
+            {!avatarUrl ? (
               <AccountCircleIcon />
             ) : (
               <Avatar
                 alt={displayName}
-                src={photoURL}
+                src={avatarUrl}
                 className="cm-small-avatar"
               />
             )}
@@ -130,7 +138,9 @@ const Header = () => {
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem component={Link} to="/my-account/user-info">
+              My Account
+            </MenuItem>
             <MenuItem onClick={signOutFn}>Logout</MenuItem>
           </Menu>
           <CreateTodo

@@ -69,6 +69,13 @@ const CreateTodo = ({ openDialogState, closeDialogHandler, initialValues }) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [formValues, setFormValues] = React.useState(initialValues);
+  const resetValues = {
+    taskName: '',
+    taskDescription: '',
+    taskTime: new Date().toISOString(),
+    taskPriority: '',
+    taskTags: [],
+  };
 
   const priorities = useSelector((state) =>
     state.firebase.profile.userPriorities
@@ -132,6 +139,7 @@ const CreateTodo = ({ openDialogState, closeDialogHandler, initialValues }) => {
     console.log('Data', formValues);
     dispatch(createTodo(formValues));
     closeDialogHandler();
+    setFormValues(resetValues);
   };
 
   return (
