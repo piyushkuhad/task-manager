@@ -153,3 +153,29 @@ export const changeUserSetting = (data) => ({
   type: appTypes.CHANGE_USER_SETTING,
   payload: data,
 });
+
+export const resetPasswordEmail = (email) => (dispatch, getState) => {
+  console.log('Email', email);
+  firebase
+    .auth()
+    .sendPasswordResetEmail(email)
+    .then(() => {
+      dispatch({
+        type: appTypes.SHOW_SNACKBAR,
+        payload: {
+          message:
+            'An email with Password recovery link has been sent to your registered mail.',
+          severity: 'success',
+        },
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: appTypes.SHOW_SNACKBAR,
+        payload: {
+          message: err.message,
+          severity: 'error',
+        },
+      });
+    });
+};

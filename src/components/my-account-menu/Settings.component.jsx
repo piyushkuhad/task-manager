@@ -7,6 +7,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import Button from '@material-ui/core/Button';
 
 import './MyAccount.styles.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -50,12 +51,6 @@ const Settings = () => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
 
-  React.useEffect(() => {
-    dispatch(changeUserSetting(values));
-
-    // eslint-disable-next-line
-  }, [values]);
-
   const handleChange = (event) => {
     //if (event.target.name === 'darkMode')
     setValues({ ...values, [event.target.name]: event.target.checked });
@@ -68,7 +63,9 @@ const Settings = () => {
     }));
   };
 
-  console.log('values', values);
+  const handleSubmit = () => {
+    dispatch(changeUserSetting(values));
+  };
 
   return (
     <div className="cm-my-account-settings-container">
@@ -81,6 +78,7 @@ const Settings = () => {
             name="cardTxtColor"
             value={values.cardTxtColor}
             onChange={handleRadioChange}
+            row
           >
             <FormControlLabel
               value="#69665c"
@@ -93,13 +91,13 @@ const Settings = () => {
               label="Light"
             />
             <FormControlLabel
-              value="#000000"
+              value="#121212"
               control={<Radio color="primary" />}
               label="Dark"
             />
           </RadioGroup>
         </FormControl>
-        <FormGroup>
+        <FormGroup row>
           <FormControlLabel
             control={
               <Switch
@@ -115,17 +113,17 @@ const Settings = () => {
           <FormControlLabel
             control={
               <Switch
-                checked={values.enableNotifications}
-                onChange={handleChange}
+                checked={false}
                 name="enableNotifications"
                 color="primary"
+                disabled
               />
             }
-            label="Enable Notifications"
+            label="Enable Notifications(coming soon)"
             className="cm-form-field"
           />
         </FormGroup>
-        <div className="cm-tag-color-picker cm-flex-type-1">
+        <div className="cm-card-color-picker cm-flex-type-1">
           <p>Choose card color:</p>
           <TwitterPicker
             color={values.cardColor}
@@ -134,9 +132,18 @@ const Settings = () => {
           />
           <div
             className="cm-color-preview box-shadow-2"
-            style={{ backgroundColor: values.cardColor }}
-          ></div>
+            style={{
+              backgroundColor: values.cardColor,
+              color: values.cardTxtColor,
+            }}
+          >
+            <h3>Preview Task</h3>
+            <p>This is how your task card will look.</p>
+          </div>
         </div>
+        <Button variant="contained" color="primary" onClick={handleSubmit}>
+          Save Changes
+        </Button>
       </div>
     </div>
   );

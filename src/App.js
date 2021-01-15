@@ -13,6 +13,7 @@ import AnimationComp from './components/animation-comp/AnimationComp.component';
 import animationData from './assets/animation/loader.json';
 import NotificationAlert from './components/notificationAlert/NotificationAlert.component';
 import MyAccount from './pages/my-account/MyAccount.component';
+import ErrorPage from './pages/error/Error.page';
 
 const App = () => {
   const auth = useSelector((state) => state.firebase.auth);
@@ -74,6 +75,7 @@ const App = () => {
                   }
                 />
                 <Redirect from="/my-account" to="/my-account/user-info" />
+                <Route component={ErrorPage} />
               </Switch>
             </Router>
           </>

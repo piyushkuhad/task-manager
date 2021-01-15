@@ -11,14 +11,30 @@ import gradientAnimData from '../../assets/animation/gradient-lines.json';
 import animationData from '../../assets/animation/auth-anim.json';
 import AnimationComp from '../animation-comp/AnimationComp.component';
 import './SignIn.styles.scss';
-import { showSnackbar } from '../../redux/app/app.action';
+import { resetPasswordEmail, showSnackbar } from '../../redux/app/app.action';
+
+const loginObj = {
+  authType: 'login',
+  btnText: 'Login',
+};
+
+const signUpObj = {
+  authType: 'signUp',
+  btnText: 'Sign Up',
+};
+
+const forgotPasswordObj = {
+  authType: 'forgotPassword',
+  btnText: 'Send Password Recovery Mail',
+};
 
 const SignIn = () => {
   const dispatch = useDispatch();
   const firebase = useFirebase();
   const history = useHistory();
   const [formValues, setFormValues] = React.useState({
-    formType: 'login',
+    //formType: 'login',
+    formType: loginObj,
     fullName: '',
     loginEmail: '',
     loginPassword: '',
@@ -35,38 +51,9 @@ const SignIn = () => {
       });
   };
 
-  // const createUserDoc = async (user) => {
-  //   console.log('USer is:', user);
-  //   if (!user) return;
-
-  //   const userRef = db.collection('users');
-  //   const userSnapShot = await userRef.get();
-  //   console.log('User SnapShot', userSnapShot.exists);
-
-  //   try {
-  //     await userRef.doc(user.id).set({
-  //       displayName: formValues.fullName,
-  //       todosRefByMonth: {},
-  //       todos: {},
-  //       userPriorities: [],
-  //       userTags: [],
-  //       accountType: 'custom',
-  //     });
-  //   } catch (err) {
-  //     console.log('Error createUserDoc!!', err);
-  //   }
-  // };
-
   const onAuthFormSubmit = async () => {
-    console.log('Form Values', formValues);
     try {
-      if (formValues.formType === 'signUp') {
-        // const { user } = await auth.createUserWithEmailAndPassword(
-        //   formValues.loginEmail,
-        //   formValues.loginPassword
-        // );
-        //await createUserDoc(user);
-
+      if (formValues.formType.authType === 'signUp') {
         //Create New User
         const email = formValues.loginEmail;
         const password = formValues.loginPassword;
@@ -83,6 +70,13 @@ const SignIn = () => {
               userTags: [],
               avatarUrl: null,
               accountType: 'custom',
+              mobileNumber: '',
+              appScheme: {
+                darkMode: false,
+                cardColor: '#fff9de',
+                cardTxtColor: '#69665c',
+                enableNotifications: false,
+              },
             }
           )
           .then(() => {
@@ -107,7 +101,7 @@ const SignIn = () => {
           });
       }
 
-      if (formValues.formType === 'login') {
+      if (formValues.formType.authType === 'login') {
         firebase
           .login({
             email: formValues.loginEmail,
@@ -130,6 +124,11 @@ const SignIn = () => {
             dispatch(showSnackbar({ message: errMsg, severity: 'error' }));
           });
       }
+
+      if (formValues.formType.authType === 'forgotPassword') {
+        console.log('formValues.loginEmail', formValues.loginEmail);
+        dispatch(resetPasswordEmail(formValues.loginEmail));
+      }
     } catch (err) {
       console.log('Auth Error', err);
     }
@@ -142,12 +141,19 @@ const SignIn = () => {
     }));
   };
 
-  const changeAuthState = () => {
-    //setAuthState((prevState) => (prevState === 'login' ? 'signUp' : 'login'));
-    setFormValues((prevState) => ({
-      ...prevState,
-      formType: prevState.formType === 'login' ? 'signUp' : 'login',
-    }));
+  const changeAuthState = (authObj) => {
+    if (authObj !== undefined) {
+      setFormValues((prevState) => ({
+        ...prevState,
+        formType: authObj,
+      }));
+    } else {
+      setFormValues((prevState) => ({
+        ...prevState,
+        formType:
+          prevState.formType.authType === 'login' ? signUpObj : loginObj,
+      }));
+    }
   };
 
   return (
@@ -165,7 +171,7 @@ const SignIn = () => {
           >
             Sign In with Google
           </Button>
-          {formValues.formType === 'signUp' ? (
+          {formValues.formType.authType === 'signUp' ? (
             <div className="cm-form-field">
               <TextField
                 label="Full Name"
@@ -190,33 +196,57 @@ const SignIn = () => {
               value={formValues.loginEmail}
             />
           </div>
-          <div className="cm-form-field">
-            <TextField
-              label="Password"
-              variant="outlined"
-              type="password"
-              name="loginPassword"
-              fullWidth
-              onChange={(e) => onFieldChange(e)}
-              value={formValues.loginPassword}
-            />
-          </div>
+
+          {formValues.formType.authType !== 'forgotPassword' ? (
+            <div className="cm-form-field">
+              <TextField
+                label="Password"
+                variant="outlined"
+                type="password"
+                name="loginPassword"
+                fullWidth
+                onChange={(e) => onFieldChange(e)}
+                value={formValues.loginPassword}
+              />
+            </div>
+          ) : (
+            <div className="cm-forgot-pass-btn">
+              <Button color="primary" onClick={() => changeAuthState(loginObj)}>
+                &#8592; Back
+              </Button>
+            </div>
+          )}
+          {formValues.formType.authType === 'login' ? (
+            <div className="cm-forgot-pass-btn">
+              <Button
+                color="primary"
+                className="cm-forgot-pass-btn"
+                onClick={() => changeAuthState(forgotPasswordObj)}
+              >
+                forgot password?
+              </Button>
+            </div>
+          ) : null}
+
           <Button
             variant="contained"
             color="primary"
             className="cm-auth-form-btn"
             onClick={() => onAuthFormSubmit()}
           >
-            {formValues.formType === 'login' ? 'Login' : 'Sign Up'}
+            {formValues.formType.btnText}
           </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            className="cm-auth-form-btn"
-            onClick={() => changeAuthState()}
-          >
-            {formValues.formType === 'login' ? 'SignUp' : 'Login'}
-          </Button>
+
+          {formValues.formType.authType !== 'forgotPassword' ? (
+            <Button
+              //variant="contained"
+              color="primary"
+              className="cm-auth-form-btn"
+              onClick={() => changeAuthState()}
+            >
+              {formValues.formType.authType === 'login' ? 'SignUp' : 'Login'}
+            </Button>
+          ) : null}
         </form>
       </div>
       <div className="cm-right-col cm-flex-type-2">

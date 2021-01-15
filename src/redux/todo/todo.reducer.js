@@ -24,7 +24,7 @@ const INITIAL_STATE = {
     severity: 'info',
   },
   appScheme: {
-    darkMode: false,
+    darkMode: true,
     cardColor: '#fff9de',
     cardTxtColor: '#69665c',
     enableNotifications: false,
@@ -48,6 +48,7 @@ const todoReducer = (state = INITIAL_STATE, action) => {
         todosRefByMonth: action.payload.todoRefByMonth,
         todosByMonthData: action.payload.todoListByDateData,
         userTags: action.payload.userTags,
+        appScheme: action.payload.appScheme,
         shouldFetchData: false,
       };
 
